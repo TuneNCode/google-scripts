@@ -16,7 +16,7 @@
 // Edit these to your liking.
 var unrespondedLabel = 'No Response',
     ignoreLabel = 'Ignore No Response',
-    minDays = 5,
+    minDays = 3,
     maxDays = 14;
 
 function main() {
@@ -38,9 +38,14 @@ function processUnresponded() {
         lastMessage = messages[messages.length - 1],
         lastFrom = lastMessage.getFrom(),
         lastTo = lastMessage.getTo(),  // I don't want to hear about it when I am sender and receiver
-        lastMessageIsOld = lastMessage.getDate().getTime() < minDaysAgo.getTime();
+        lastMessageIsOld = lastMessage.getDate().getTime() < minDaysAgo.getTime(),
+        lastMessageStripped = lastMessage.getBody().replace(/(<div class="gmail_extra">)([\s\S]*)(<\/div>)/, "$1$3").replace(/(<div class="gmail_quote">)([\s\S]*)(<\/div>)/, "$1$3").replace(/(<blockquote type="cite">)([\s\S]*)(<\/blockquote>)/,"$1$3").replace(/(<a)([\s\S]*)(<\/a>)/, "$1$3").replace(/(<img)([\s\S]*)(>)/, "$1$3").replace(/(http)([\s\S]*)(\s|<)/,"$3"),
+        containsQuestionMark = lastMessageStripped.search('\\?');
 
-    if (isMe(lastFrom) && !isMe(lastTo) && lastMessageIsOld && !threadHasLabel(thread, ignoreLabel)) {
+    if (isMe(lastFrom) && !isMe(lastTo) && lastMessageIsOld && !threadHasLabel(thread, ignoreLabel) && containsQuestionMark > -1) {
+      Logger.log("Subject: " + lastMessage.getSubject());
+      Logger.log("Message: " + lastMessageStripped);
+      Logger.log("Contains Question Mark: " + containsQuestionMark)
       markUnresponded(thread);
       numUpdated++;
     }
