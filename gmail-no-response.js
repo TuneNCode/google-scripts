@@ -9,7 +9,8 @@
  * This is most effective when paired with a time-based script trigger.
  *
  * For installation instructions, read this blog post:
- * http://jonathan-kim.com/2013/Gmail-No-Response/
+ * Credit to http://jonathan-kim.com/2013/Gmail-No-Response/ for the original script.
+ * The variation can be found at https://www.social-response.co.uk/find-emails-with-no-reply
  */
 
 
